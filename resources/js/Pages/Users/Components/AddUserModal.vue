@@ -1,0 +1,117 @@
+<script setup>
+    import { useToast } from 'primevue/usetoast';
+    import { Form } from '@primevue/forms';
+    import InputText from 'primevue/inputtext';
+    import Button from 'primevue/button';
+    import Select from 'primevue/select';
+    import Divider from 'primevue/divider';
+    import Message from 'primevue/message';
+    
+    import * as yup from 'yup';
+
+    import { useForm } from '@inertiajs/vue3'
+
+    const toast = useToast();
+    const form = useForm({
+        name: null,
+        email: null,
+        department: null
+    });
+
+    const props = defineProps({
+        department: Object // or Object, depending on your data
+    })
+
+    const emit = defineEmits(['close'])
+
+    const schema = yup.object().shape({
+        name: yup
+        .string()
+        .required('The name field is required.')
+        .matches(/^[A-Za-z0-9 ]+$/, 'The name may only contain letters, numbers, and spaces.'),
+        email: yup
+        .string()
+        .required('The email field is required.')
+        .email('Please input a valid email'),
+        department: yup
+        .number()
+        .required('The department field is required')
+    });
+
+    const resolver = ({ values }) => {
+        const errors = {};
+        
+        try {
+            schema.validateSync(values, { abortEarly: false });
+        } catch (validationError) {
+            validationError.inner.forEach(err => {
+            errors[err.path] = [{ message: err.message }];
+            });
+        }
+
+        return { values, errors };
+    };
+
+    const onFormSubmit = ({ valid }) => {
+        if (valid) {
+            form.post('/add-user', {
+                onSuccess: () => {
+                    toast.add({
+                        summary: 'Success',
+                        detail: 'Form Submitted',
+                        severity: 'success',
+                        life: 3000
+                    });
+                    emit('close');
+                }
+            });
+        }
+    };
+</script>
+<template>
+    <span class="text-surface-500 dark:text-surface-400 block mb-8">Type the user details.</span>
+    <Form v-slot="$form" :resolver @submit="onFormSubmit">
+        <div class="flex flex-col gap-1 mb-4">
+            <label for="name" class="font-semibold">Name</label>
+            <InputText v-model="form.name" id="name" name="name" class="flex-auto" autocomplete="off" fluid/>
+            <Message
+                v-if="$form.name?.invalid || form.errors.name"
+                severity="error"
+                size="small"
+                variant="simple"
+            >
+                {{ $form.name?.error?.message || form.errors.name }}
+            </Message>
+        </div>
+        <div class="flex flex-col gap-1 mb-4">
+            <label for="email" class="font-semibold w-24">Email</label>
+            <InputText v-model="form.email" id="email" name="email" class="flex-auto" autocomplete="off" fluid/>
+            <Message
+                v-if="$form.email?.invalid || form.errors.email"
+                severity="error"
+                size="small"
+                variant="simple"
+            >
+                {{ $form.email?.error?.message || form.errors.email }}
+            </Message>
+        </div>
+        <div class="flex flex-col gap-1 mb-4">
+            <label for="department" class="font-semibold w-24">Department</label>
+            <Select v-model="form.department" id="department" name="department" class="flex-auto" :options="props.department" optionLabel="name" optionValue="id" />
+            <Message
+                v-if="$form.department?.invalid || form.errors.department"
+                severity="error"
+                size="small"
+                variant="simple"
+            >
+                {{ $form.department?.error?.message || form.errors.department }}
+            </Message>
+        </div>
+        <div class="my-8">
+            <Divider></Divider>
+        </div>
+        <div class="flex justify-end gap-2">
+            <Button type="submit" label="Save" :style="{ width: '7rem' }"></Button>
+        </div>
+    </Form>
+</template>

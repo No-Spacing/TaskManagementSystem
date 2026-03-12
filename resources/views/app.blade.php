@@ -8,4 +8,5 @@
     <body>
         @inertia
     </body>
+    <script src="http://localhost:8098"></script>
 </html>
