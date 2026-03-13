@@ -29,6 +29,17 @@
                             </a>
                         </li>
                         <li>
+                            <a v-ripple href="/task" class="flex items-center justify-between cursor-pointer p-4 rounded text-surface-700 hover:bg-surface-100 dark:text-surface-0 dark:hover:bg-surface-800 duration-150 transition-colors p-ripple">
+                                <div>
+                                    <i class="pi pi-ticket mr-2"></i>
+                                    <span class="font-medium">Ticket</span>
+                                </div>
+                                <div>
+                                    <Badge value="2" severity="warn"></Badge>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
                             <a v-ripple class="flex items-center justify-between cursor-pointer p-4 rounded text-surface-700 hover:bg-surface-100 dark:text-surface-0 dark:hover:bg-surface-800 duration-150 transition-colors p-ripple">
                                 <div>
                                     <i class="pi pi-file-edit mr-2"></i>

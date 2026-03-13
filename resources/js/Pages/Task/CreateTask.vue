@@ -1,6 +1,8 @@
 <script setup>
     import Layout from "../../Layouts/Master.vue";
 
+    import { ref } from 'vue'
+
     import Card from 'primevue/card';
     import FloatLabel from 'primevue/floatlabel';
     import InputText from 'primevue/inputtext';
@@ -8,28 +10,41 @@
     import Textarea  from 'primevue/textarea';
     import Button from 'primevue/button';
     import AutoComplete from 'primevue/autocomplete';
+    import { Form } from '@primevue/forms';
 
-    import { ref } from 'vue'
+    import { useForm } from '@inertiajs/vue3'
+
+    const props = defineProps({
+        users: {
+            type: Array, // expect an array of user names or objects
+            required: true
+        }
+
+    });
 
     const members = ref(['']) // start with one input
-    const value = ref(null);
-    const users = ref(["User 1", "User 2", "User 3"]);
-    const filteredUsers = ref([]);
 
     function addMember() {
         members.value.push('') // add new input field
     }
 
+    const filteredUsers = ref([...props.users]);
+
     const searchUsers = (event) => {
-      // When dropdown is clicked, event.query is empty
-      if (!event.query.trim().length) {
-        filteredUsers.value = [...users.value]; // show all
-      } else {
-        filteredUsers.value = users.value.filter(user =>
-          user.toLowerCase().includes(event.query.toLowerCase())
-        );
-      }
+        const query = event.query.trim().toLowerCase();
+
+        if (!query.length) {
+            filteredUsers.value = [...props.users];
+        } else {
+            filteredUsers.value = props.users.filter(user =>
+            user.name.toLowerCase().includes(query)
+            );
+        }
     };
+
+
+
+
 </script>
 <template>
     <Layout>
@@ -38,7 +53,7 @@
                 <template #title>Create</template>
                 <template #subtitle><Divider /></template>
                 <template #content>
-                    <form class="grid grid-rows-1 gap-10">
+                    <Form class="grid grid-rows-1 gap-10">
                         <div class="grid grid-rows-1 gap-5">
                             <div>
                                 <FloatLabel variant="on">
@@ -72,6 +87,8 @@
                                         placeholder="Select a user"
                                         v-model="members[index]" 
                                         :suggestions="filteredUsers"
+                                        optionLabel="name"
+                                        optionValue="id"
                                         dropdown
                                         @complete="searchUsers"
                                     />
@@ -80,9 +97,9 @@
                         </div>
                         <div class="">
                             <Divider />
-                            <Button label="Submit" style="width: 150px;" class="flex justify-self-center"></Button>
+                            <Button type="submit" label="Submit" style="width: 150px;" class="flex justify-self-center"></Button>
                         </div>
-                    </form>
+                    </Form>
                 </template>
             </Card>
         </div>

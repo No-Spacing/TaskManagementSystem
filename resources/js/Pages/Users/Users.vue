@@ -34,7 +34,7 @@
                 <DataTable :value="props.users" tableStyle="min-width: 50rem">
                     <Column field="name" header="Name"></Column>
                     <Column field="email" header="Email"></Column>
-                    <Column field="department" header="Department"></Column>
+                    <Column field="department.name" header="Department"></Column>
                     <Column field="status" header="Status"></Column>
                 </DataTable>
             </template>

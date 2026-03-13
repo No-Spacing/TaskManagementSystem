@@ -6,6 +6,7 @@
     import Select from 'primevue/select';
     import Divider from 'primevue/divider';
     import Message from 'primevue/message';
+    import Password from 'primevue/password';
     
     import * as yup from 'yup';
 
@@ -15,7 +16,8 @@
     const form = useForm({
         name: null,
         email: null,
-        department: null
+        department: null,
+        password: null
     });
 
     const props = defineProps({
@@ -35,7 +37,12 @@
         .email('Please input a valid email'),
         department: yup
         .number()
-        .required('The department field is required')
+        .required('The department field is required'),
+        password: yup
+        .string()
+        .required('The password field is required')
+        .min(8, 'Password is too short - should be 8 chars minimum.')
+        .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.')
     });
 
     const resolver = ({ values }) => {
@@ -105,6 +112,18 @@
                 variant="simple"
             >
                 {{ $form.department?.error?.message || form.errors.department }}
+            </Message>
+        </div>
+        <div class="flex flex-col gap-1 mb-4">
+            <label for="password" class="font-semibold w-24">Password</label>
+            <Password type="password" v-model="form.password" id="password" name="password" class="flex-auto" toggleMask fluid/>
+            <Message
+                v-if="$form.password?.invalid || form.errors.password"
+                severity="error"
+                size="small"
+                variant="simple"
+            >
+                {{ $form.password?.error?.message || form.errors.password }}
             </Message>
         </div>
         <div class="my-8">

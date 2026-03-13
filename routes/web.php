@@ -5,12 +5,17 @@ use Inertia\Inertia;
 
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\TaskController;
 
 
 Route::inertia('/', 'Dashboard/Dashboard');
+
+
 Route::prefix('task')->group(function () {
-    Route::inertia('/', 'Task/Task');
-    Route::inertia('/create-task', 'Task/CreateTask');
+    Route::controller(TaskController::class)->group(function () {
+        Route::get('/', 'Index');
+        Route::get('/create-task', 'CreateTask');
+    });
 });
 
 Route::controller(DepartmentController::class)->group(function () {

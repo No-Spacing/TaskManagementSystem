@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('department_id')->references('id')->on('departments');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->foreignId('status_id')->references('id')->on('statuses');
             $table->rememberToken();
             $table->timestamps();
         });

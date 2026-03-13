@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 use Inertia\Inertia;
 
@@ -13,7 +15,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::all();
+        $users = User::with(['department'])->get();
         $department = Department::all();
 
         return Inertia::render('Users/Users', [
@@ -26,14 +28,17 @@ class UserController extends Controller
     {
         $request->validate([
             'name' => 'required|regex:/^[A-Za-z0-9 ]+$/',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users',
             'department' => 'required|integer|exists:departments,id',
+            'password' => 'required|string|min:8'
         ]);
 
         User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'department_id' => $request->department
+            'department_id' => $request->department,
+            'password' => Hash::make(Str::random(12)),
+            'status_id' => 1
         ]);
     }
 }

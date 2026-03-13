@@ -6,6 +6,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+
+use App\Models\Department;
 
 class User extends Authenticatable
 {
@@ -21,7 +25,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'department_id'
+        'department_id',
+        'status_id'
     ];
 
     /**
@@ -45,5 +50,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function department(): HasOne
+    {
+        return $this->hasOne(Department::class, 'id', 'department_id');
     }
 }
