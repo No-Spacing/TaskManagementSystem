@@ -21,7 +21,7 @@
                             <a v-ripple href="/task" class="flex items-center justify-between cursor-pointer p-4 rounded text-surface-700 hover:bg-surface-100 dark:text-surface-0 dark:hover:bg-surface-800 duration-150 transition-colors p-ripple">
                                 <div>
                                     <i class="pi pi-list mr-2"></i>
-                                    <span class="font-medium">Task Sequence</span>
+                                    <span class="font-medium">Tasks</span>
                                 </div>
                                 <div>
                                     <Badge value="2" severity="warn"></Badge>

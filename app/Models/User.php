@@ -56,4 +56,10 @@ class User extends Authenticatable
     {
         return $this->hasOne(Department::class, 'id', 'department_id');
     }
+
+    public function taskContents()
+    {
+        return $this->hasMany(UserTaskContent::class);
+    }
+
 }

@@ -12,15 +12,18 @@
     import AutoComplete from 'primevue/autocomplete';
     import Message from 'primevue/message';
     import { Form } from '@primevue/forms';
+    import { useToast } from 'primevue/usetoast';
 
     import * as yup from 'yup';
 
     import { useForm } from '@inertiajs/vue3'
 
+    const toast = useToast();
+
     const form = useForm({
         title: null,
         description: null,
-        members: [],
+        members: []
     });
 
     const props = defineProps({
@@ -30,10 +33,8 @@
         }
     });
 
-    // const members = ref(['']) // start with one input
-
     function addMember() {
-        form.members.push(''); 
+        form.members.push({ id: null, name: '' });
     }
 
     const filteredUsers = ref(props.users.map(u => ({
@@ -41,26 +42,17 @@
         name: u.name ?? u.user?.name
     })));
 
-    // const searchUsers = (event) => {
-    //     const query = event.query.trim().toLowerCase();
+    const searchUsers = (event) => {
+        const query = event.query.trim().toLowerCase();
 
-    //     if (!query.length) {
-    //         filteredUsers.value = [...props.users];
-    //     } else {
-    //         filteredUsers.value = props.users.filter(user =>
-    //         user.name.toLowerCase().includes(query)
-    //         );
-    //     }
-    // };
-
-    function searchUsers(event) {
-        const query = event.query.toLowerCase()
-        filteredUsers.value = props.users
-            .map(u => ({
-            id: u.id ?? u.user?.id,
-            name: u.name ?? u.user?.name
-            }))
-    }
+        if (!query.length) {
+            filteredUsers.value = [...props.users];
+        } else {
+            filteredUsers.value = props.users.filter(user =>
+            user.name.toLowerCase().includes(query)
+            );
+        }
+    };
 
     const schema = yup.object().shape({
         title: yup
@@ -86,7 +78,7 @@
             schema.validateSync(values, { abortEarly: false });
         } catch (validationError) {
             validationError.inner.forEach(err => {
-            errors[err.path] = [{ message: err.message }];
+                errors[err.path] = [{ message: err.message }];
             });
         }
         return { values, errors };
@@ -158,33 +150,26 @@
                                 </div>
                                 <Divider></Divider>
                             </div>
-                            <div class="grid grid-cols-1 gap-4 items-start">
-                                <div
-                                    class="flex flex-col gap-2"
-                                    v-for="(task, index) in form.members"
-                                    :key="index"
+                            <div class="grid grid-cols-1 gap-4 items-start" v-for="(member, index) in form.members" :key="index">
+                                <label>Step {{ index + 1 }}</label>
+                                <AutoComplete
+                                    v-model="form.members[index]"
+                                    :name="`members[${index}]`"
+                                    placeholder="Select a user"
+                                    :suggestions="filteredUsers"
+                                    optionLabel="name"
+                                    @complete="searchUsers"
+                                    fluid
+                                    dropdown
+                                />
+                                <Message
+                                    v-if="$form.members?.[index]?.invalid"
+                                    severity="error"
+                                    size="small"
+                                    variant="simple"
                                 >
-                                    <label :for="`members-${index}`">Step {{ index + 1 }}</label>
-                                    <AutoComplete
-                                        placeholder="Select a user"
-                                        v-model="form.members[index]"
-                                        :suggestions="filteredUsers"
-                                        :id="`members-${index}`"
-                                        :name="`members[${index}]`"
-                                        optionLabel="name"
-                                        dropdown
-                                        @complete="searchUsers"
-                                    />
-
-                                    <Message
-                                        v-if="$form.members?.[index]?.invalid"
-                                        severity="error"
-                                        size="small"
-                                        variant="simple"
-                                    >
-                                        {{ $form.members?.[index]?.error?.message }}
-                                    </Message>                                  
-                                </div>
+                                    {{ $form.members[index]?.error?.message }}
+                                </Message>
                             </div>
                         </div>
                         <div class="">

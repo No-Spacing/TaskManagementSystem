@@ -5,18 +5,21 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\User;
+use App\Models\Task;
 
 use Inertia\Inertia;
 
 class TaskController extends Controller
 {
     public function Index () {
-        return Inertia::render('Task/Task');
+        $tasks = Task::with(['status', 'users'])->get();
+
+        return Inertia::render('Task/Task', ['tasks' => $tasks]);
     }
 
     public function CreateTask () {
         $users = User::select(['id', 'name'])->get();
-        return Inertia::render('Task/CreateTask',['users' => $users]);
+        return Inertia::render('Task/CreateTask', ['users' => $users]);
     }
 
     public function AddTask (Request $request) {
@@ -27,11 +30,17 @@ class TaskController extends Controller
 
         $ids = array_column($request->members, 'id'); 
 
-        $record = Record::create([
+        $task = Task::create([
             'title' => $request->title,
             'description' => $request->description,
+            'created_by' => 1,
+            'status_id' => 1
         ]);
-        $record->callpoints()->attach($ids);  
+        $task->users()->attach($ids, [
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
 
     }
 }

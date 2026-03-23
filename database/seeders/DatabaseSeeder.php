@@ -18,17 +18,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
+        Status::create(['name' => 'in progress']);
+        Status::create(['name' => 'finished']);
         Status::create(['name' => 'active']);
         Status::create(['name' => 'inactive']);
-
+ 
         Department::create(['name' => 'Information Technology']);
         Department::create(['name' => 'Graphic Artist']);
         Department::create(['name' => 'Regulatory']);
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
     }
 }
