@@ -6,10 +6,13 @@ use Inertia\Inertia;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\AuthController;
 
+Route::inertia('/', 'Auth/Login');
 
-Route::inertia('/', 'Dashboard/Dashboard');
+Route::post('/login', [AuthController::class, 'login']);
 
+Route::inertia('/dashboard', 'Dashboard/Dashboard');
 
 Route::prefix('task')->group(function () {
     Route::controller(TaskController::class)->group(function () {

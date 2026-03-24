@@ -35,7 +35,7 @@
                     <Column field="name" header="Name"></Column>
                     <Column field="email" header="Email"></Column>
                     <Column field="department.name" header="Department"></Column>
-                    <Column field="status" header="Status"></Column>
+                    <Column field="status.name" header="Status"></Column>
                 </DataTable>
             </template>
         </Card>

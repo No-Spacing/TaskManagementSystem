@@ -33,6 +33,7 @@ class TaskController extends Controller
         $task = Task::create([
             'title' => $request->title,
             'description' => $request->description,
+            'steps' => 1,
             'created_by' => 1,
             'status_id' => 1
         ]);

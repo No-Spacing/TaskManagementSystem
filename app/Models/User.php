@@ -25,6 +25,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'steps',
         'department_id',
         'status_id'
     ];
@@ -60,6 +61,11 @@ class User extends Authenticatable
     public function taskContents()
     {
         return $this->hasMany(UserTaskContent::class);
+    }
+
+    public function status () : HasOne
+    {
+        return $this->hasOne(Status::class, 'id', 'status_id');
     }
 
 }

@@ -26,5 +26,7 @@ class DatabaseSeeder extends Seeder
         Department::create(['name' => 'Information Technology']);
         Department::create(['name' => 'Graphic Artist']);
         Department::create(['name' => 'Regulatory']);
+
+        User::factory(5)->create();
     }
 }

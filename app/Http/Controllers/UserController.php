@@ -15,7 +15,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::with(['department'])->get();
+        $users = User::with(['department', 'status'])->get();
         $department = Department::all();
 
         return Inertia::render('Users/Users', [
@@ -38,7 +38,7 @@ class UserController extends Controller
             'email' => $request->email,
             'department_id' => $request->department,
             'password' => Hash::make(Str::random(12)),
-            'status_id' => 1
+            'status_id' => 3
         ]);
     }
 }
