@@ -42,7 +42,7 @@
             </template>
             <template #content>
                 <div v-for="(task, index) in props.tasks" :key="index">
-                    <Accordion value="0" >
+                    <Accordion value="0">
                         <AccordionPanel>
                             <AccordionHeader>
                                 <div>
@@ -53,7 +53,7 @@
                                 </div>
                             </AccordionHeader>
                             <AccordionContent>
-                                <Card>
+                                <Card class="custom-card">
                                     <template #title>
                                         <div class="flex justify-between">
                                             <div>
@@ -63,7 +63,7 @@
                                     </template>
                                     <template #subtitle><Divider /></template>
                                     <template #content>
-                                        <Stepper :value="task.StepList">
+                                        <Stepper :value="task.steps" class="custom-step-panel">
                                             <StepList>
                                                 <Step 
                                                     v-for="(user, index) in task.users" 
@@ -83,7 +83,7 @@
                                                         <div class=" border-surface-200 dark:border-surface-700 rounded bg-surface-50 dark:bg-surface-950 font-medium">
                                                             <Form class="grid grid-rows-1">
                                                                 <div class="grid grid-rows-1 gap-4">
-                                                                    
+                                                                        
                                                                     <div>
                                                                         <FileUpload url="/api/upload" :multiple="true" :maxFileSize="1000000">
                                                                             <template #empty>

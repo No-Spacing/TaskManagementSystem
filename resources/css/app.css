@@ -10,3 +10,13 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+.custom-card {
+  height: 600px;        /* fixed height */
+  overflow-y: auto;     /* scroll if content exceeds */
+}
+
+.custom-step-panel {
+  height: 400px;
+}
+
