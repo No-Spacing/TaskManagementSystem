@@ -10,9 +10,13 @@
     import Toast from 'primevue/toast';
     import { useToast } from 'primevue/usetoast';
 
+    import { useForm, usePage } from '@inertiajs/vue3';
+
+    import { watchEffect, onMounted } from 'vue';
+
     import * as yup from 'yup';
 
-    import { useForm } from '@inertiajs/vue3';
+    const page = usePage();
 
     const toast = useToast();
 
@@ -57,7 +61,20 @@
             });
         }
     };
-
+    
+    onMounted(() => {
+        const errors = page.props.errors;
+        if (errors && Object.keys(errors).length > 0) {
+            Object.values(errors).forEach((msg) => {
+            toast.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: msg,
+                life: 3000
+            });
+            });
+        }
+    });
 </script>
 <template>
     <div class="flex justify-center items-center min-h-screen">

@@ -8,29 +8,36 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\AuthController;
 
-Route::inertia('/', 'Auth/Login');
+use Illuminate\Support\Facades\Auth;
+
+
 
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::inertia('/dashboard', 'Dashboard/Dashboard');
+Route::middleware(['auth-group'])->group(function () {
+    Route::inertia('/', 'Auth/Login');
 
-Route::prefix('task')->group(function () {
-    Route::controller(TaskController::class)->group(function () {
-        Route::get('/', 'Index');
-        Route::get('/create-task', 'CreateTask');
-        Route::post('/add-task', 'AddTask');
+    Route::inertia('/dashboard', 'Dashboard/Dashboard');
+
+    Route::prefix('task')->group(function () {
+        Route::controller(TaskController::class)->group(function () {
+            Route::get('/', 'Index');
+            Route::get('/create-task', 'CreateTask');
+            Route::post('/add-task', 'AddTask');
+        });
+    });
+
+    Route::controller(DepartmentController::class)->group(function () {
+        Route::get('/department', 'index');
+        Route::post('/add-department', 'addDepartment');
+    });
+
+    Route::controller(UserController::class)->group(function () {
+        Route::get('/users', 'index');
+        Route::post('/add-user', 'addUser');
     });
 });
 
-Route::controller(DepartmentController::class)->group(function () {
-    Route::get('/department', 'index');
-    Route::post('/add-department', 'addDepartment');
-});
-
-Route::controller(UserController::class)->group(function () {
-    Route::get('/users', 'index');
-    Route::post('/add-user', 'addUser');
-});
 
 
 

@@ -8,6 +8,7 @@ use App\Models\Status;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -26,6 +27,14 @@ class DatabaseSeeder extends Seeder
         Department::create(['name' => 'Information Technology']);
         Department::create(['name' => 'Graphic Artist']);
         Department::create(['name' => 'Regulatory']);
+
+        User::create([
+            'email' => 'admin@pmcg.com',
+            'name' => "Web Developer",
+            'password' => 'password',
+            'department_id' => 1,
+            'status_id' => 3
+        ]);
 
         User::factory(5)->create();
     }
