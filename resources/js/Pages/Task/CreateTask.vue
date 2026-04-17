@@ -16,8 +16,9 @@
 
     import * as yup from 'yup';
 
-    import { useForm } from '@inertiajs/vue3'
+    import { useForm, usePage } from '@inertiajs/vue3'
 
+    const page = usePage();
     const toast = useToast();
 
     const form = useForm({
@@ -94,7 +95,14 @@
                         severity: 'success',
                         life: 3000
                     });
-                    emit('close');
+                },
+                onError: () => {
+                    toast.add({
+                        summary: 'Error',
+                        detail: 'Please add members to submit',
+                        severity: 'error',
+                        life: 3000
+                    });
                 }
             });
         }

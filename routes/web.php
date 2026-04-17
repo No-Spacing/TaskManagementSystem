@@ -24,6 +24,7 @@ Route::middleware(['auth-group'])->group(function () {
             Route::get('/', 'Index');
             Route::get('/create-task', 'CreateTask');
             Route::post('/add-task', 'AddTask');
+            Route::post('/submit-task', 'SubmitTask');
         });
     });
 
@@ -36,6 +37,8 @@ Route::middleware(['auth-group'])->group(function () {
         Route::get('/users', 'index');
         Route::post('/add-user', 'addUser');
     });
+
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
 
 

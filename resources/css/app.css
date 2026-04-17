@@ -11,12 +11,4 @@
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
 
-.custom-card {
-  height: 600px;        /* fixed height */
-  overflow-y: auto;     /* scroll if content exceeds */
-}
-
-.custom-step-panel {
-  height: 400px;
-}
 

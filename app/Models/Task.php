@@ -19,16 +19,15 @@ class Task extends Model
     ];
 
     public function status () : HasOne {
-        return $this->hasOne(Status::class, 'id', 'status_id');
+        return $this->hasOne(Status::class, 'id', 'status_id')
+                    ->select(['id', 'name']);
     }
 
-    public function contents()
+    public function users()
     {
-        return $this->hasMany(UserTaskContent::class);
+        return $this->belongsToMany(User::class, 'user_task_contents')
+                    ->withPivot(['content', 'type', 'created_at', 'updated_at'])
+                    ->select(['users.id', 'name']);
     }
 
-
-    public function users () {
-        return $this->belongsToMany(User::class, 'task_user', 'task_id', 'user_id');
-    }
 }

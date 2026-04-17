@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 use App\Models\Department;
+use App\Models\Task;
 
 class User extends Authenticatable
 {
@@ -58,14 +59,23 @@ class User extends Authenticatable
         return $this->hasOne(Department::class, 'id', 'department_id');
     }
 
-    public function taskContents()
+    public function tasks()
     {
-        return $this->hasMany(UserTaskContent::class);
+        return $this->belongsToMany(Task::class, 'task_user');
+    }
+
+    public function pendingTasks()
+    {
+        return $this->tasks()->wherePivot('status_id', 1);
+    }
+
+    public function getCountOfPendingTaskAttribute()
+    {
+        return $this->pendingTasks()->count();
     }
 
     public function status () : HasOne
     {
         return $this->hasOne(Status::class, 'id', 'status_id');
     }
-
 }

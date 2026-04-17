@@ -43,6 +43,7 @@ class HandleInertiaRequests extends Middleware
             'user' => function () {
                 $user = Auth::user();
                 return $user ? [
+                    'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
                     'can' => [
@@ -50,8 +51,8 @@ class HandleInertiaRequests extends Middleware
                         'create' => $user->can('create', User::class),
                         'update' => $user->can('update', User::class),
                         'delete' => $user->can('delete', User::class),
-                        'viewUser' => $user->can('viewUser', User::class),
-                    ]
+                    ],
+                    'countOfPendingTask' => $user->count_of_pending_task,
                 ] : null;
             }
             //

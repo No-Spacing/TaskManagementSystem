@@ -6,13 +6,19 @@ use Illuminate\Http\Request;
 
 use App\Models\User;
 use App\Models\Task;
+use App\Models\UserTaskContent;
+
+use Illuminate\Support\Facades\Auth;
 
 use Inertia\Inertia;
 
 class TaskController extends Controller
 {
     public function Index () {
-        $tasks = Task::with(['status', 'users'])->get();
+        $tasks = Task::with(['status', 'users'])
+        ->join('task_user', 'task_user.task_id', '=', 'tasks.id')
+        ->where('task_user.user_id', Auth::user()->id)
+        ->get();
 
         return Inertia::render('Task/Task', ['tasks' => $tasks]);
     }
@@ -26,6 +32,7 @@ class TaskController extends Controller
         $request->validate([
             'title' => 'required|regex:/^[A-Za-z0-9 ]+$/',
             'description' => 'required|regex:/^[A-Za-z0-9 ]+$/',
+            'members' => ['required'],
         ]);
 
         $ids = array_column($request->members, 'id'); 
@@ -34,14 +41,33 @@ class TaskController extends Controller
             'title' => $request->title,
             'description' => $request->description,
             'steps' => 1,
-            'created_by' => 1,
+            'created_by' => Auth::user()->id,
             'status_id' => 1
         ]);
+
         $task->users()->attach($ids, [
             'created_at' => now(),
             'updated_at' => now(),
+            'status_id' => 1
         ]);
 
+        foreach ($ids as $userId) {
+            UserTaskContent::create([
+                'task_id' => $task->id,
+                'user_id' => $userId,
+                'content' => null,
+                'type'    => null,
+            ]);
+        }
+    }
 
+    public function SubmitTask(Request $request) {
+        $request->validate([
+            'file' => 'required|mimes:pdf,jpg,jpeg,png,gif',
+            'content' => 'required',
+        ], [
+            'file.required' => 'Please upload a file',
+            'file.mimes' => 'Only PDF or image files are allowed',
+        ]);
     }
 }

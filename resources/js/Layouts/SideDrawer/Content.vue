@@ -4,6 +4,11 @@
     import Badge from "primevue/badge";
 
     import { ref } from "vue";
+
+    const props = defineProps({
+        countOfPendingTask: Number,
+    })
+
 </script>
 <template>
     <div class="flex flex-col h-full">
@@ -24,7 +29,7 @@
                                     <span class="font-medium">Tasks</span>
                                 </div>
                                 <div>
-                                    <Badge value="2" severity="warn"></Badge>
+                                    <Badge :value="props.countOfPendingTask" severity="warn"></Badge>
                                 </div>
                             </a>
                         </li>

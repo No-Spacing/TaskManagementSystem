@@ -29,7 +29,7 @@ class DatabaseSeeder extends Seeder
         Department::create(['name' => 'Regulatory']);
 
         User::create([
-            'email' => 'admin@pmcg.com',
+            'email' => 'admin@pmcgroup.com',
             'name' => "Web Developer",
             'password' => 'password',
             'department_id' => 1,
