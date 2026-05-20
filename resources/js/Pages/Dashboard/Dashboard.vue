@@ -4,7 +4,7 @@
 </script>
 <template>
     <Layout>
-        <Card style="width: 75rem; margin-top: 10px;">
+        <Card>
             <template #title>Dashboard</template>
         </Card>
     </Layout>

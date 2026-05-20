@@ -103,7 +103,7 @@
                         </Message>
                     </div>
                     <Divider />
-                    <Button type="submit" severity="secondary" label="Login" />
+                    <Button type="submit" severity="secondary" :loading="form.processing" label="Login" />
                 </Form>
             </template>
         </Card>

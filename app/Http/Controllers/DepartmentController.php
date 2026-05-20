@@ -11,7 +11,7 @@ use App\Models\Department;
 class DepartmentController extends Controller
 {
     public function index () {
-        $departments = Department::all();
+        $departments = Department::with('users')->get();
         return Inertia::render('Department/Department',['departments' => $departments]);
     }
 

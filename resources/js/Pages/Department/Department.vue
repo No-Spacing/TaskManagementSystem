@@ -9,6 +9,10 @@
     import Column from 'primevue/column';
     import Button from 'primevue/button';
     import Dialog from 'primevue/dialog';
+    import Accordion from 'primevue/accordion';
+    import AccordionPanel from 'primevue/accordionpanel';
+    import AccordionHeader from 'primevue/accordionheader';
+    import AccordionContent from 'primevue/accordioncontent';
 
     const props = defineProps({departments: Object})
 
@@ -16,7 +20,7 @@
 </script>
 <template>
     <Layout>
-        <Card style="width: 75rem; margin-top: 10px;">
+        <Card>
             <template #title>
                 <div class="flex justify-between">
                     <div>
@@ -29,9 +33,23 @@
                 </div>
             </template>
             <template #content>
-                <DataTable :value="props.departments" tableStyle="min-width: 50rem">
+                <Accordion multiple>
+                    <AccordionPanel v-for="(department, index) in props.departments" :key="index" :value="department.id" >
+                        <AccordionHeader>
+                            <div>
+                                {{ department.name }}
+                            </div>
+                        </AccordionHeader>
+                        <AccordionContent>
+                            <div class="pl-5" v-for="(user, index) in department.users" :key="index" :value="user.id">
+                                {{ ++index }}. {{ user.name }}
+                            </div>
+                        </AccordionContent>
+                    </AccordionPanel>
+                </Accordion>
+                <!-- <DataTable :value="props.departments" tableStyle="min-width: 50rem">
                     <Column field="name" header="Name"></Column>
-                </DataTable>
+                </DataTable> -->
             </template>
         </Card>
         <Dialog v-model:visible="addDepartmentDialog" modal header="Add Department" :style="{ width: '35rem' }">

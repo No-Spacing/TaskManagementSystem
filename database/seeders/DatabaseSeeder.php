@@ -32,7 +32,7 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@pmcgroup.com',
             'name' => "Web Developer",
             'password' => 'password',
-            'department_id' => 1,
+            'department_id' => random_int(1, 3),
             'status_id' => 3
         ]);
 

@@ -84,18 +84,21 @@
 </script>
 <template>
     <Layout>
-        <Card style="width: 75rem; margin-top: 10px;">
+        <Card>
             <template #title>
                 <div class="flex justify-between">
                     <div>
                         List of Tasks
                     </div>
-                    <div>
+                    <!-- <div>
                         <Button as="a" href="/task/create-task">Create Task</Button>
-                    </div>
+                    </div> -->
                 </div>
             </template>
             <template #content>
+                <div v-if="props.tasks.length === 0">
+                    Your task is empty.  
+                </div>
                 <Accordion>
                     <AccordionPanel v-for="(task, index) in props.tasks" :key="index" :value="task.id" >
                         <AccordionHeader>
@@ -129,9 +132,9 @@
                                         </StepList>
                                         <StepPanels>
                                             <StepPanel
-                                            v-for="(content, index) in task.users"
-                                            :key="index"
-                                            :value="index + 1"
+                                                v-for="(content, index) in task.users"
+                                                :key="index"
+                                                :value="index + 1"
                                             >
                                                 <fieldset :disabled="page.props.user.id != content.pivot.user_id">
                                                     <Form v-slot="$form" :resolver @submit="onFormSubmit" class="flex flex-col space-y-4">
@@ -172,7 +175,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="flex justify-end">
-                                                            <Button type="submit" label="Submit" />
+                                                            <Button type="submit" :loading="form.processing" label="Submit" />
                                                         </div>
                                                     </Form>
                                                 </fieldset>

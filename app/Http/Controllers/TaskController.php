@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\Department;
 use App\Models\User;
 use App\Models\Task;
 use App\Models\UserTaskContent;
@@ -16,8 +17,10 @@ class TaskController extends Controller
 {
     public function Index () {
         $tasks = Task::with(['status', 'users'])
-        ->join('task_user', 'task_user.task_id', '=', 'tasks.id')
-        ->where('task_user.user_id', Auth::user()->id)
+        ->whereHas('users', function ($query) {
+            $query->where('users.id', auth()->id());
+        })
+        ->with(['status', 'users'])
         ->get();
 
         return Inertia::render('Task/Task', ['tasks' => $tasks]);
@@ -25,10 +28,15 @@ class TaskController extends Controller
 
     public function CreateTask () {
         $users = User::select(['id', 'name'])->get();
-        return Inertia::render('Task/CreateTask', ['users' => $users]);
+        $departments = Department::with(['users:id,department_id,name'])
+        ->select(['id', 'name'])
+        ->get();
+
+        return Inertia::render('Task/CreateTask', ['users' => $users, 'departments' => $departments]);
     }
 
     public function AddTask (Request $request) {
+
         $request->validate([
             'title' => 'required|regex:/^[A-Za-z0-9 ]+$/',
             'description' => 'required|regex:/^[A-Za-z0-9 ]+$/',
@@ -46,19 +54,11 @@ class TaskController extends Controller
         ]);
 
         $task->users()->attach($ids, [
-            'created_at' => now(),
-            'updated_at' => now(),
-            'status_id' => 1
+            'content' => null,
+            'file' => null,
+            'status_id' => 1,
         ]);
 
-        foreach ($ids as $userId) {
-            UserTaskContent::create([
-                'task_id' => $task->id,
-                'user_id' => $userId,
-                'content' => null,
-                'type'    => null,
-            ]);
-        }
     }
 
     public function SubmitTask(Request $request) {
@@ -69,5 +69,12 @@ class TaskController extends Controller
             'file.required' => 'Please upload a file',
             'file.mimes' => 'Only PDF or image files are allowed',
         ]);
+
+        $user->tasks()->updateExistingPivot($taskId, [
+            'content' => $request->input('content'),
+            'file'    => $request->file('file')->store('task_files'),
+            'status_id' => 2, // e.g. "submitted"
+        ]);
+
     }
 }

@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 use App\Models\Department;
 use App\Models\Task;
+use App\Models\UserTaskContent;
 
 class User extends Authenticatable
 {
@@ -61,18 +62,24 @@ class User extends Authenticatable
 
     public function tasks()
     {
-        return $this->belongsToMany(Task::class, 'task_user');
+        return $this->belongsToMany(Task::class, 'user_task_contents')
+                    ->withPivot(['content', 'file', 'status_id'])
+                    ->withTimestamps();
     }
 
-    public function pendingTasks()
+    public function userTaskContents()
     {
-        return $this->tasks()->wherePivot('status_id', 1);
+        return $this->hasMany(UserTaskContent::class);
     }
 
+    
     public function getCountOfPendingTaskAttribute()
     {
-        return $this->pendingTasks()->count();
+        return $this->tasks()
+                    ->wherePivot('status_id', 1) // assuming 1 = pending
+                    ->count();
     }
+
 
     public function status () : HasOne
     {

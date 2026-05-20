@@ -130,7 +130,7 @@
             <Divider></Divider>
         </div>
         <div class="flex justify-end gap-2">
-            <Button type="submit" label="Save" :style="{ width: '7rem' }"></Button>
+            <Button type="submit" label="Save" :loading="form.processing" :style="{ width: '7rem' }"></Button>
         </div>
     </Form>
 </template>

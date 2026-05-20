@@ -16,7 +16,8 @@ return new class extends Migration
             $table->foreignId('task_id')->constrained('tasks')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->text('content')->nullable();
-            $table->string('type')->nullable();
+            $table->string('file')->nullable();
+            $table->foreignId('status_id')->nullable()->constrained('statuses')->onDelete('cascade');
             $table->timestamps();
         });
     }

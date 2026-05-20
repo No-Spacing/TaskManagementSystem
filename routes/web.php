@@ -38,7 +38,7 @@ Route::middleware(['auth-group'])->group(function () {
         Route::post('/add-user', 'addUser');
     });
 
-    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/logout', [AuthController::class, 'logout']);
 });
 
 

@@ -31,6 +31,10 @@
         users: {
             type: Array, // expect an array of user names or objects
             required: true
+        },
+        departments: {
+            type: Array,
+            required: true
         }
     });
 
@@ -38,22 +42,32 @@
         form.members.push({ id: null, name: '' });
     }
 
-    const filteredUsers = ref(props.users.map(u => ({
-        id: u.id ?? u.user?.id,
-        name: u.name ?? u.user?.name
+    const filteredUsers = ref(props.departments.map(u => ({
+        id: u.id,
+        name: u.name,
+        users: u.users,
     })));
-
+    
     const searchUsers = (event) => {
-        const query = event.query.trim().toLowerCase();
+    const query = event.query.trim().toLowerCase();
 
         if (!query.length) {
-            filteredUsers.value = [...props.users];
+            // Reset to original departments
+            filteredUsers.value = [...props.departments];
         } else {
-            filteredUsers.value = props.users.filter(user =>
-            user.name.toLowerCase().includes(query)
-            );
+            // Filter users inside each department
+            filteredUsers.value = props.departments
+            .map(dept => ({
+                ...dept,
+                users: dept.users.filter(user =>
+                user.name.toLowerCase().includes(query)
+                )
+            }))
+            // Only keep departments that have matching users
+            .filter(dept => dept.users.length > 0);
         }
     };
+
 
     const schema = yup.object().shape({
         title: yup
@@ -110,83 +124,84 @@
 </script>
 <template>
     <Layout>
-        <div class="grid place-content-center">
-            <Card style="width: 75rem; margin-top: 10px;">
-                <template #title>Create</template>
-                <template #subtitle><Divider /></template>
-                <template #content>
-                    <Form v-slot="$form" :resolver="resolver" class="grid grid-rows-1 gap-10" @submit="onFormSubmit">
-                        <div class="grid grid-rows-1 gap-5">
-                            <div>
-                                <FloatLabel variant="on">
-                                    <label for="title">Title</label>
-                                    <InputText v-model="form.title" id="title" name="title" fluid></InputText>
-                                </FloatLabel>
-                                <Message
-                                    v-if="$form.title?.invalid || form.errors.title"
-                                    severity="error"
-                                    size="small"
-                                    variant="simple"
-                                >
-                                    {{ $form.title?.error?.message || form.errors.title }}
-                                </Message>
-                            </div>
-                            <div>
-                                <FloatLabel variant="on">
-                                    <label for="description" >Description</label>
-                                    <Textarea v-model="form.description" id="description" name="description" fluid></Textarea>
-                                </FloatLabel>
-                                <Message
-                                    v-if="$form.description?.invalid || form.errors.description"
-                                    severity="error"
-                                    size="small"
-                                    variant="simple"
-                                >
-                                    {{ $form.description?.error?.message || form.errors.description }}
-                                </Message>
-                            </div>
+        <Card>
+            <template #title>Create</template>
+            <template #subtitle><Divider /></template>
+            <template #content>
+                <Form v-slot="$form" :resolver="resolver" class="grid grid-rows-1 gap-10" @submit="onFormSubmit">
+                    <div class="grid grid-rows-1 gap-5">
+                        <div>
+                            <FloatLabel variant="on">
+                                <label for="title">Title</label>
+                                <InputText v-model="form.title" id="title" name="title" fluid></InputText>
+                            </FloatLabel>
+                            <Message
+                                v-if="$form.title?.invalid || form.errors.title"
+                                severity="error"
+                                size="small"
+                                variant="simple"
+                            >
+                                {{ $form.title?.error?.message || form.errors.title }}
+                            </Message>
                         </div>
-                        <div class="grid grid-rows-1 gap-1">
-                            <div>
-                                <div class="flex justify-between">
-                                    <h2 class="text-lg font-bold">Members</h2>
-                                    <Button 
-                                        label="Add Members" 
-                                        icon="pi pi-plus" 
-                                        @click="addMember" 
-                                    />
-                                </div>
-                                <Divider></Divider>
-                            </div>
-                            <div class="grid grid-cols-1 gap-4 items-start" v-for="(member, index) in form.members" :key="index">
-                                <label>Step {{ index + 1 }}</label>
-                                <AutoComplete
-                                    v-model="form.members[index]"
-                                    :name="`members[${index}]`"
-                                    placeholder="Select a user"
-                                    :suggestions="filteredUsers"
-                                    optionLabel="name"
-                                    @complete="searchUsers"
-                                    fluid
-                                    dropdown
+                        <div>
+                            <FloatLabel variant="on">
+                                <label for="description" >Description</label>
+                                <Textarea v-model="form.description" id="description" name="description" fluid></Textarea>
+                            </FloatLabel>
+                            <Message
+                                v-if="$form.description?.invalid || form.errors.description"
+                                severity="error"
+                                size="small"
+                                variant="simple"
+                            >
+                                {{ $form.description?.error?.message || form.errors.description }}
+                            </Message>
+                        </div>
+                    </div>
+                    <div class="grid grid-rows-1 gap-1">
+                        <div>
+                            <div class="flex justify-between">
+                                <h2 class="text-lg font-bold">Members</h2>
+                                <Button 
+                                    label="Add Members" 
+                                    icon="pi pi-plus" 
+                                    @click="addMember" 
                                 />
-                                <Message
-                                    v-if="$form.members?.[index]?.invalid"
-                                    severity="error"
-                                    size="small"
-                                    variant="simple"
-                                >
-                                    {{ $form.members[index]?.error?.message }}
-                                </Message>
                             </div>
+                            <Divider></Divider>
                         </div>
-                        <div class="">
-                            <Divider />
-                            <Button type="submit" label="Submit" style="width: 150px;" class="flex justify-self-center"></Button>
+                        <div class="grid grid-cols-1 gap-4 items-start" v-for="(member, index) in form.members" :key="index">
+                            <label>Step {{ index + 1 }}</label>
+                            <AutoComplete
+                                v-model="form.members[index]"
+                                :name="`members[${index}]`"
+                                placeholder="Select a user"
+                                :suggestions="filteredUsers"
+                                optionLabel="name"
+                                optionGroupLabel="name" 
+                                optionGroupChildren="users"
+                                @complete="searchUsers"
+                                fluid
+                                dropdown
+                            />
+                            <Message
+                                v-if="$form.members?.[index]?.invalid"
+                                severity="error"
+                                size="small"
+                                variant="simple"
+                            >
+                                {{ $form.members[index]?.error?.message }}
+                            </Message>
                         </div>
-                    </Form>
-                </template>
-            </Card>
-        </div>
+                    </div>
+                    <div class="">
+                        <Divider />
+                        <Button type="submit" label="Submit" :loading="form.processing" style="width: 150px;" class="flex justify-self-center"></Button>
+                    </div>
+                </Form>
+            </template>
+        </Card>
+  
     </Layout>
 </template>

@@ -19,7 +19,7 @@
 </script>
 <template>
     <Layout>
-        <Card style="width: 75rem; margin-top: 10px;">
+        <Card>
             <template #title>
                 <div class="flex justify-between">
                     <div>
@@ -36,6 +36,7 @@
                     <Column field="email" header="Email"></Column>
                     <Column field="department.name" header="Department"></Column>
                     <Column field="status.name" header="Status"></Column>
+                    <Column field="" header="Actions"></Column>
                 </DataTable>
             </template>
         </Card>
