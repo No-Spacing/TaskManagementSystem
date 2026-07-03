@@ -1,16 +1,9 @@
 <script setup>
-    import Card from 'primevue/card';
-    import { Form } from '@primevue/forms';
-    import Divider  from 'primevue/divider';
-    import InputText from 'primevue/inputtext';
-    import Button from 'primevue/button';
-    import Message from 'primevue/message';
-    import IconField from 'primevue/iconfield';
-    import InputIcon from 'primevue/inputicon';
-    import Toast from 'primevue/toast';
-    import { useToast } from 'primevue/usetoast';
+    import { Card, Divider, InputText, Button, Message, IconField, InputIcon, Toast }from 'primevue';
 
-    import { useForm, usePage } from '@inertiajs/vue3';
+    import { useToast } from 'primevue/usetoast';
+    import { Form } from '@primevue/forms';
+    import { useForm, usePage, Head } from '@inertiajs/vue3';
 
     import { watchEffect, onMounted } from 'vue';
 
@@ -49,7 +42,7 @@
 
     const onFormSubmit = ({ valid }) => {
         if (valid) {
-            form.post('/login', {
+            form.post('/submit-login', {
                 onError: () => {
                     toast.add({
                         summary: 'Error',
@@ -77,10 +70,13 @@
     });
 </script>
 <template>
+    <Head title="Login" />
     <div class="flex justify-center items-center min-h-screen">
         <Card style="width: 35rem; overflow: hidden">
             <template #header>
-                <img alt="user header" src="https://i1.wp.com/www.primefaces.org/wp-content/uploads/2021/05/hashnode-vue-3.5.02x.jpg?resize=1060%2C557&ssl=1" />
+                <div class="flex justify-center">
+                    <img class="p-5" alt="user header" src="/public/assets/images/pmcg.png" style="max-width: 500px; height: auto;"/>
+                </div>
             </template>
             <template #title>Login</template>
             <template #subtitle>Input your credentials.</template>
@@ -103,7 +99,7 @@
                         </Message>
                     </div>
                     <Divider />
-                    <Button type="submit" severity="secondary" :loading="form.processing" label="Login" />
+                    <Button type="submit" :loading="form.processing" label="Login" />
                 </Form>
             </template>
         </Card>

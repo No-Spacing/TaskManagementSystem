@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->longText('description');
-            $table->foreignId('assigned_to')->references('id')->on('users');
+            $table->foreignId('assigned_departments')->references('id')->on('departments');
             $table->foreignId('created_by')->references('id')->on('users');
+            $table->foreignId('submitted_by')->references('id')->on('users');
             $table->foreignId('status_id')->references('id')->on('statuses');
             $table->timestamps();
         });

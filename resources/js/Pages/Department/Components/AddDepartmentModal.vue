@@ -1,10 +1,7 @@
 <script setup>
     import { useToast } from 'primevue/usetoast';
     import { Form } from '@primevue/forms';
-    import InputText from 'primevue/inputtext';
-    import Button from 'primevue/button';
-    import Divider from 'primevue/divider';
-    import Message from 'primevue/message';
+    import { Button, Divider, InputText, Message } from 'primevue';
     
     import * as yup from 'yup';
 

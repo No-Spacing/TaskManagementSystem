@@ -17,12 +17,12 @@ class AuthMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(!Auth::check() && $request->path() != '/'){
-            return redirect('/')->withErrors(['error' => 'User must be logged in.']);
+        if(!Auth::check() && $request->path() != 'login'){
+            return redirect('login')->withErrors(['error' => 'User must be logged in.']);
         }
 
-        if(Auth::check() && $request->path() == '/'){
-            return redirect('/dashboard');
+        if(Auth::check() && $request->path() == 'login'){
+            return redirect('dashboard');
         }
 
         $response = $next($request);

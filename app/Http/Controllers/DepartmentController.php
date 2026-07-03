@@ -10,12 +10,12 @@ use App\Models\Department;
 
 class DepartmentController extends Controller
 {
-    public function index () {
+    public function Index () {
         $departments = Department::with('users')->get();
-        return Inertia::render('Department/Department',['departments' => $departments]);
+        return Inertia::render('Department/Departments',['departments' => $departments]);
     }
 
-    public function addDepartment (Request $request) {
+    public function AddDepartment (Request $request) {
         $request->validate([
             'name' => 'required|regex:/^[A-Za-z0-9 ]+$/'
         ]);

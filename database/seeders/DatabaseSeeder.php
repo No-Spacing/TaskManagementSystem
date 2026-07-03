@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use App\Models\Department;
 use App\Models\Status;
+use App\Models\Role;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -28,12 +29,17 @@ class DatabaseSeeder extends Seeder
         Department::create(['name' => 'Graphic Artist']);
         Department::create(['name' => 'Regulatory']);
 
+        Role::create(['name' => 'Admin']);
+        Role::create(['name' => 'Manager']);
+        Role::create(['name' => 'Staff']);
+
         User::create([
             'email' => 'admin@pmcgroup.com',
             'name' => "Web Developer",
             'password' => 'password',
-            'department_id' => random_int(1, 3),
-            'status_id' => 3
+            'department_id' => 1,
+            'status_id' => 3,
+            'role_id' => 1
         ]);
 
         User::factory(5)->create();

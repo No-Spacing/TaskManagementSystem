@@ -18,6 +18,8 @@
         "@primevue/forms": "^4.5.4",
         "@tailwindcss/vite": "^4.2.1",
         "@vitejs/plugin-vue": "^6.0.4",
+        "chart.js": "^4.5.1",
+        "motion-v": "^2.3.0",
         "primeicons": "^7.0.0",
         "primevue": "^4.5.4",
         "tailwindcss": "^4.2.1",

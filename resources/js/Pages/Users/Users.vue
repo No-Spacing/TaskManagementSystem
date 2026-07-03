@@ -4,11 +4,7 @@
 
     import { ref } from 'vue';
 
-    import Card from 'primevue/card';
-    import DataTable from 'primevue/datatable';
-    import Column from 'primevue/column';
-    import Button from 'primevue/button';
-    import Dialog from 'primevue/dialog';
+    import { Card, DataTable, Column, Button, Dialog, Divider, Badge, Tag } from 'primevue';
 
     const props = defineProps({
         users: Object,
@@ -19,7 +15,7 @@
 </script>
 <template>
     <Layout>
-        <Card>
+        <Card class="p-5">
             <template #title>
                 <div class="flex justify-between">
                     <div>
@@ -29,14 +25,28 @@
                         <Button @click="addUserDialog = true">Add User</Button>
                     </div>
                 </div>
+                <Divider></Divider>
             </template>
             <template #content>
                 <DataTable :value="props.users" tableStyle="min-width: 50rem">
                     <Column field="name" header="Name"></Column>
                     <Column field="email" header="Email"></Column>
                     <Column field="department.name" header="Department"></Column>
-                    <Column field="status.name" header="Status"></Column>
-                    <Column field="" header="Actions"></Column>
+                    <Column field="status" header="Status">
+                        <template #body="{data}">
+                            <div v-if="data.status.name === 'active'">
+                                <Tag :value="data.status.name.toUpperCase()" severity="success"></Tag>
+                            </div>
+                            <div v-if="data.status.name === 'inactive'">
+                                <Tag :value="data.status.name.toUpperCase()" severity="danger"></Tag>
+                            </div>
+                        </template>
+                    </Column>
+                    <Column field="" header="">
+                        <template #body>
+                            <Button severity="secondary" icon="pi pi-pencil" aria-label="Save" />
+                        </template>
+                    </Column>
                 </DataTable>
             </template>
         </Card>

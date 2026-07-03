@@ -2,11 +2,11 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="icon" href="{{ asset('assets/images/pmcgroup.png') }}" type="image/x-icon">
         @vite(['resources/js/app.js', 'resources/css/app.css'])
         @inertiaHead
     </head>
     <body>
         @inertia
     </body>
-    <script src="http://localhost:8098"></script>
 </html>

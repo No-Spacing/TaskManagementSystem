@@ -3,14 +3,7 @@
 
     import { ref } from 'vue'
 
-    import Card from 'primevue/card';
-    import FloatLabel from 'primevue/floatlabel';
-    import InputText from 'primevue/inputtext';
-    import Divider from 'primevue/divider';
-    import Textarea  from 'primevue/textarea';
-    import Button from 'primevue/button';
-    import AutoComplete from 'primevue/autocomplete';
-    import Message from 'primevue/message';
+    import { Card, FloatLabel, InputText, Divider, Textarea, Button, AutoComplete, Message} from 'primevue';
     import { Form } from '@primevue/forms';
     import { useToast } from 'primevue/usetoast';
 

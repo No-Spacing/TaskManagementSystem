@@ -46,6 +46,8 @@ class HandleInertiaRequests extends Middleware
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
+                    'department' => $user->department->name,
+                    'role' => $user->role->name,
                     'can' => [
                         'view' => $user->can('view', User::class),
                         'create' => $user->can('create', User::class),

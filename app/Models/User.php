@@ -59,6 +59,11 @@ class User extends Authenticatable
     {
         return $this->hasOne(Department::class, 'id', 'department_id');
     }
+    
+    public function role(): HasOne
+    {
+        return $this->hasOne(Role::class, 'id', 'role_id');
+    }
 
     public function tasks()
     {

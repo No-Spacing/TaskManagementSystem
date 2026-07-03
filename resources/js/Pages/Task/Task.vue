@@ -1,26 +1,20 @@
 <script setup>
     import Layout from '../../Layouts/Master.vue'; 
 
+    import { Badge, Button, Card, Divider, FileUpload, FloatLabel, InputText, Message, Textarea } from 'primevue';
+    
+    import Accordion from 'primevue/accordion';
+    import AccordionPanel from 'primevue/accordionpanel';
+    import AccordionHeader from 'primevue/accordionheader';
+    import AccordionContent from 'primevue/accordioncontent';
     import Stepper from 'primevue/stepper';
     import StepList from 'primevue/steplist';
     import StepPanels from 'primevue/steppanels';
     import StepItem from 'primevue/stepitem';
     import Step from 'primevue/step';
     import StepPanel from 'primevue/steppanel';
-    import Button from 'primevue/button';
-    import Card from 'primevue/card'
-    import Divider from 'primevue/divider'
-    import Accordion from 'primevue/accordion';
-    import AccordionPanel from 'primevue/accordionpanel';
-    import AccordionHeader from 'primevue/accordionheader';
-    import AccordionContent from 'primevue/accordioncontent';
-    import Badge from 'primevue/badge';
+
     import { Form } from '@primevue/forms';
-    import Textarea from 'primevue/textarea';
-    import FloatLabel from 'primevue/floatlabel';
-    import InputText from 'primevue/inputtext';
-    import Message  from 'primevue/message';
-    import FileUpload from 'primevue/fileupload'
 
     import { usePage, useForm } from '@inertiajs/vue3';
 
@@ -84,17 +78,18 @@
 </script>
 <template>
     <Layout>
-        <Card>
+        <Card class="p-5">
             <template #title>
                 <div class="flex justify-between">
                     <div>
                         List of Tasks
                     </div>
-                    <!-- <div>
+                    <div>
                         <Button as="a" href="/task/create-task">Create Task</Button>
-                    </div> -->
+                    </div>
                 </div>
             </template>
+            <template #subtitle><Divider /></template>
             <template #content>
                 <div v-if="props.tasks.length === 0">
                     Your task is empty.  

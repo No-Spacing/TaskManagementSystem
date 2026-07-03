@@ -27,6 +27,7 @@ class UserFactory extends Factory
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
             'department_id' => rand(1, 3), // adjust based on your departments
+            'role_id' => rand(1, 3),
             'password' => Hash::make(Str::random(12)),
             'status_id' => 3,
         ];

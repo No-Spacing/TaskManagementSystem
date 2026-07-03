@@ -76,5 +76,6 @@ class TaskController extends Controller
             'status_id' => 2, // e.g. "submitted"
         ]);
 
+        return redirect('/task');
     }
 }
