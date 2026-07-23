@@ -11,7 +11,7 @@
 <template>
     <div class="flex flex-col gap-3">
         <Card v-for="user in props.users">
-            <template #title>Jhey Marc Abad</template>
+            <template #title>Juan Dela Cruz</template>
             <template #subtitle><Divider /> Employee Progress</template>
             <template #content>
                 <ProgressBar :value="50" />
