@@ -12,7 +12,7 @@ import { animator } from 'chart.js';
 import { MotionPlugin } from 'motion-v'
 
 createInertiaApp({
-    resole: name => {
+    resolve: name => {
         const pages = import.meta.glob('./Pages/**/*.vue', { eager: true }) 
         return pages[`./Pages/${name}.vue`]
     },
