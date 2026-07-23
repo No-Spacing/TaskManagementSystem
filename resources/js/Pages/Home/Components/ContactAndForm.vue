@@ -2,7 +2,22 @@
     import { useToast } from 'primevue/usetoast';
     import { InputText, FloatLabel, Button, Textarea, Message } from 'primevue';
     import { Form } from '@primevue/forms';
+    import { useForm } from '@inertiajs/vue3';
     import * as yup from 'yup';
+
+    const toast = useToast();
+
+    const form = useForm({
+        firstname: null,
+        lastname: null,
+        email: null,
+        confirm_email: null,
+        organization: null,
+        address: null,
+        city: null,
+        country: null,
+        message: null,
+    });
 
     const schema = yup.object().shape({
         firstname: yup
@@ -24,7 +39,8 @@
         .oneOf([yup.ref('email')], 'The emails must match.'),
         organization: yup
         .string()
-        .required('The organization field is required.'),
+        .required('The organization field is required.')
+        .matches(/^[A-Za-z0-9]+$/, 'The first name may only contain letters and numbers.'),
         address: yup
         .string()
         .required('The address field is required.'),
@@ -33,7 +49,10 @@
         .required('The city field is required.'),
         country: yup
         .string()
-        .required('The country field is required.')
+        .required('The country field is required.'),
+        message: yup
+        .string()
+        .required('The message field is required.')
     });
 
     const resolver = ({ values }) => {
@@ -50,6 +69,26 @@
         return { values, errors };
     };
 
+    const onFormSubmit = ({ valid }) => {
+        if (valid) {
+            form.post('/submit-inquiry', {
+                onSuccess: (message) => {
+                    toast.add({
+                        summary: 'Success',
+                        detail: message.props.flash.message,
+                        severity: 'success',
+                        life: 3000
+                    });
+                    form.reset();
+                },
+                onError: (error) => {
+                    console.log(error);
+                },
+                preserveScroll: true
+           }) 
+        }
+    };
+
 </script>
 <template>
     <section class="contact-section bg-gray-100 py-16 px-8">
@@ -61,7 +100,6 @@
                 inViewOptions: { once:true }
             }"
         >
-            
             <!-- Contact Information -->
             <div class="bg-white p-8 shadow-lg rounded-lg">
                 <h2 class="text-3xl font-bold mb-4 text-center">Contact Us</h2>
@@ -83,34 +121,34 @@
             <!-- Inquiry Form -->
             <div class="bg-white p-8 shadow-lg rounded-lg">
                 <h2 class="text-3xl font-bold mb-4 text-center">Inquiry Form</h2>
-                <Form v-slot="$form" :resolver="resolver">
+                <Form v-slot="$form" :resolver="resolver"  @submit="onFormSubmit">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div>
                             <FloatLabel variant="on">
                                 <label for="firstname">First Name</label>
-                                <InputText id="firstname" name="firstname" fluid></InputText>
+                                <InputText v-model="form.firstname" id="firstname" name="firstname" fluid></InputText>
                             </FloatLabel>
                             <Message
-                                v-if="$form.firstname?.invalid"
+                                v-if="form.errors.firstname || $form.firstname?.invalid"
                                 severity="error"
                                 size="small"
                                 variant="simple"
                             >
-                                {{ $form.firstname?.error?.message }}
+                                {{ form.errors.firstname || $form.firstname?.error?.message }}
                             </Message>
                         </div>
                         <div>
                             <FloatLabel variant="on">
                                 <label for="lastname">Last Name</label>
-                                <InputText id="lastname" name="lastname" fluid></InputText>
+                                <InputText v-model="form.lastname" id="lastname" name="lastname" fluid></InputText>
                             </FloatLabel>
                             <Message
-                                v-if="$form.lastname?.invalid"
+                                v-if="form.errors.lastname || $form.lastname?.invalid"
                                 severity="error"
                                 size="small"
                                 variant="simple"
                             >
-                                {{ $form.lastname?.error?.message }}
+                                {{ form.errors.lastname || $form.lastname?.error?.message }}
                             </Message>
                         </div>
                     </div>
@@ -118,29 +156,29 @@
                         <div>
                             <FloatLabel variant="on">
                                 <label for="email">Email</label>
-                                <InputText id="email" name="email" fluid></InputText>
+                                <InputText v-model="form.email" id="email" name="email" fluid></InputText>
                             </FloatLabel>
                             <Message
-                                v-if="$form.email?.invalid"
+                                v-if="form.errors.email || $form.email?.invalid"
                                 severity="error"
                                 size="small"
                                 variant="simple"
                             >
-                                {{ $form.email?.error?.message }}
+                                {{ form.errors.email || $form.email?.error?.message }}
                             </Message>
                         </div>
                         <div>
                             <FloatLabel variant="on">
                                 <label for="confirm_email">Confirm Email</label>
-                                <InputText id="confirm_email" name="confirm_email" fluid></InputText>
+                                <InputText v-model="form.confirm_email" id="confirm_email" name="confirm_email" fluid></InputText>
                             </FloatLabel>
                             <Message
-                                v-if="$form.confirm_email?.invalid"
+                                v-if="form.errors.confirm_email || $form.confirm_email?.invalid"
                                 severity="error"
                                 size="small"
                                 variant="simple"
                             >
-                                {{ $form.confirm_email?.error?.message }}
+                                {{ form.errors.confirm_email || $form.confirm_email?.error?.message }}
                             </Message>
                         </div>
                     </div>
@@ -148,45 +186,77 @@
                     <div class="mb-4">
                         <FloatLabel variant="on">
                             <label for="organization">Organization</label>
-                            <InputText id="organization" name="organization" fluid></InputText>
+                            <InputText v-model="form.organization" id="organization" name="organization" fluid></InputText>
                         </FloatLabel>
                         <Message
-                                v-if="$form.organization?.invalid"
+                            v-if="form.errors.organization || $form.organization?.invalid"
+                            severity="error"
+                            size="small"
+                            variant="simple"
+                        >
+                            {{ form.errors.organization || $form.organization?.error?.message }}
+                        </Message>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <FloatLabel variant="on">
+                                <label for="address">Address</label>
+                                <InputText v-model="form.address" id="address" name="address" fluid></InputText>
+                            </FloatLabel>
+                            <Message
+                                v-if="form.errors.address || $form.address?.invalid"
                                 severity="error"
                                 size="small"
                                 variant="simple"
                             >
-                                {{ $form.organization?.error?.message }}
+                                {{ form.errors.address || $form.address?.error?.message }}
                             </Message>
-                    </div>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                        <FloatLabel variant="on">
-                            <label for="address">Address</label>
-                            <InputText id="address" name="address" fluid></InputText>
-                        </FloatLabel>
-                        <FloatLabel variant="on">
-                            <label for="city">City</label>
-                            <InputText id="city" name="city" fluid></InputText>
-                        </FloatLabel>
+                        </div>
+                        <div>
+                            <FloatLabel variant="on">
+                                <label for="city">City</label>
+                                <InputText v-model="form.city" id="city" name="city" fluid></InputText>
+                            </FloatLabel>
+                            <Message
+                                v-if="form.errors.city ||$form.city?.invalid"
+                                severity="error"
+                                size="small"
+                                variant="simple"
+                            >
+                                {{ form.errors.city ||$form.city?.error?.message }}
+                            </Message>
+                        </div>
                     </div>
                     <div class="mb-4">
                         <FloatLabel variant="on">
                             <label for="country">Country</label>
-                            <InputText id="country" name="country" fluid></InputText>
+                            <InputText v-model="form.country" id="country" name="country" fluid></InputText>
                         </FloatLabel>
+                        <Message
+                            v-if="form.errors.country || $form.country?.invalid"
+                            severity="error"
+                            size="small"
+                            variant="simple"
+                        >
+                            {{ form.errors.country || $form.country?.error?.message }}
+                        </Message>
                     </div>
                     <div class="mb-4">
                         <FloatLabel variant="on">
                             <label for="message">Message</label>
-                            <Textarea id="message" name="message" rows="8" fluid></Textarea>
+                            <Textarea v-model="form.message" id="message" name="message" rows="8" fluid></Textarea>
                         </FloatLabel>
+                        <Message
+                            v-if="form.errors.message || $form.message?.invalid"
+                            severity="error"
+                            size="small"
+                            variant="simple"
+                        >
+                            {{ form.errors.message || $form.message?.error?.message }}
+                        </Message>
                     </div>
                     <div class="text-center">
-                        <Button class="w-50">Submit</Button>
-                        <!-- <button type="submit"
-                            class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition duration-300 ease-in-out">
-                            Send
-                        </button> -->
+                        <Button type="submit" :loading="form.processing" class="w-50">Submit</Button>
                     </div>
                 </Form>
             </div>

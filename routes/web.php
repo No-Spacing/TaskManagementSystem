@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 
 Route::controller(HomeController::class)->group(function () {
     Route::get('/', 'Index');
+    Route::post('/submit-inquiry', 'SubmitInquiry');
 });
 
 Route::middleware(['guest'])->group(function () {
@@ -59,7 +60,6 @@ Route::middleware(['auth-group'])->group(function () {
         });
     });
         
-
     Route::controller(UserController::class)->group(function () {
         Route::get('/users', 'index');
         Route::post('/add-user', 'addUser');
