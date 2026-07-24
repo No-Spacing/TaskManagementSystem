@@ -4,7 +4,6 @@ import { createInertiaApp } from '@inertiajs/vue3'
 
 import PrimeVue from 'primevue/config';
 import Aura from '@primeuix/themes/aura';
-import Lara from '@primeuix/themes/lara'
 import Ripple from 'primevue/ripple';
 import ToastService from 'primevue/toastservice';
 import AnimateOnScroll from 'primevue/animateonscroll';

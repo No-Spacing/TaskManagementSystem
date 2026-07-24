@@ -4,7 +4,7 @@
     import Menu from 'primevue/menu';
     import Image from 'primevue/image';
 
-    import { usePage } from "@inertiajs/vue3";
+    import { usePage, Link } from "@inertiajs/vue3";
 
     import { ref } from "vue";
 
@@ -86,69 +86,6 @@
 <template>
     <div class="">
         <div class="overflow-y-auto">
-            <!-- <ul class="list-none m-0">
-                <li>
-                    <ul class="list-none p-0 m-0 overflow-hidden">
-                        <li>
-                            <a v-ripple href="/" class="flex items-center cursor-pointer p-4 rounded text-surface-700 hover:bg-surface-100 dark:text-surface-0 dark:hover:bg-surface-800 duration-150 transition-colors p-ripple">
-                                <i class="pi pi-home mr-2"></i>
-                                <span class="font-medium">Dashboard</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a v-ripple href="/task" class="flex items-center justify-between cursor-pointer p-4 rounded text-surface-700 hover:bg-surface-100 dark:text-surface-0 dark:hover:bg-surface-800 duration-150 transition-colors p-ripple">
-                                <div>
-                                    <i class="pi pi-list mr-2"></i>
-                                    <span class="font-medium">Tasks</span>
-                                </div>
-                                <div>
-                                    <Badge :value="props.countOfPendingTask" severity="warn"></Badge>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a v-ripple href="/task" class="flex items-center justify-between cursor-pointer p-4 rounded text-surface-700 hover:bg-surface-100 dark:text-surface-0 dark:hover:bg-surface-800 duration-150 transition-colors p-ripple">
-                                <div>
-                                    <i class="pi pi-ticket mr-2"></i>
-                                    <span class="font-medium">Ticket</span>
-                                </div>
-                                <div>
-                                    <Badge value="2" severity="warn"></Badge>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a v-ripple class="flex items-center justify-between cursor-pointer p-4 rounded text-surface-700 hover:bg-surface-100 dark:text-surface-0 dark:hover:bg-surface-800 duration-150 transition-colors p-ripple">
-                                <div>
-                                    <i class="pi pi-file-edit mr-2"></i>
-                                    <span class="font-medium">Drafts</span>
-                                </div>
-                                <div>
-                                    <Badge value="2" severity="warn"></Badge>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a v-ripple class="flex items-center cursor-pointer p-4 rounded text-surface-700 hover:bg-surface-100 dark:text-surface-0 dark:hover:bg-surface-800 duration-150 transition-colors p-ripple">
-                                <i class="pi pi-calendar mr-2"></i>
-                                <span class="font-medium">Calendar</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a v-ripple href="/department" class="flex items-center cursor-pointer p-4 rounded text-surface-700 hover:bg-surface-100 dark:text-surface-0 dark:hover:bg-surface-800 duration-150 transition-colors p-ripple">
-                                <i class="pi pi-building mr-2"></i>
-                                <span class="font-medium">Department</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a v-ripple href="/users" class="flex items-center cursor-pointer p-4 rounded text-surface-700 hover:bg-surface-100 dark:text-surface-0 dark:hover:bg-surface-800 duration-150 transition-colors p-ripple">
-                                <i class="pi pi-users mr-2"></i>
-                                <span class="font-medium">Users</span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-            </ul> -->
             <div class="card flex justify-center">
                 <Menu :model="items" class="w-full md:w-60">
                     <template #start>
@@ -161,10 +98,10 @@
                         <span class="text-primary font-bold">{{ item.label }}</span>
                     </template>
                     <template #item="{ item, props }">
-                        <a v-ripple class="flex items-center" v-bind="props.action" :href="item.link">
+                        <Link v-ripple class="flex items-center" v-bind="props.action" :href="item.link">
                             <span :class="item.icon" />
                             <span>{{ item.label }}</span>
-                        </a>
+                        </Link>
                     </template>
                     <template #end>
                         <div class="flex justify-between items-center pt-2">
