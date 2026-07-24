@@ -31,16 +31,18 @@ export default defineConfig({
         output: {
             manualChunks(id) {
                 if (id.includes('node_modules')) {
-                    // Separate PrimeVue components & icons into their own chunk
-                    if (id.includes('primevue') || id.includes('@primevue') || id.includes('primeicons')) {
-                        return 'primevue';
+                    // Pull PrimeVue, themes, and PrimeIcons out of app.js
+                    if (id.includes('primevue') || id.includes('@primevue') || id.includes('@primeuix')) {
+                    return 'vendor-primevue';
                     }
-                    // Bundle core Vue and Inertia dependencies together
+                    // Pull Motion plugin / VueUse out
+                    if (id.includes('@vueuse') || id.includes('motion')) {
+                    return 'vendor-motion';
+                    }
+                    // Pull Vue framework and Inertia out
                     if (id.includes('vue') || id.includes('@inertiajs')) {
-                        return 'vendor-vue';
+                    return 'vendor-vue';
                     }
-                    // Everything else in node_modules goes here
-                    return 'vendor';
                 }
             },
         },
