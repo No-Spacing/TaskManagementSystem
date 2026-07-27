@@ -10,6 +10,7 @@ use App\Models\Task;
 use App\Models\UserTaskContent;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 use Inertia\Inertia;
 
@@ -40,7 +41,28 @@ class TaskController extends Controller
         $request->validate([
             'title' => 'required|regex:/^[A-Za-z0-9 ]+$/',
             'description' => 'required|regex:/^[A-Za-z0-9 ]+$/',
-            'members' => ['required'],
+            'members' => [
+                'required',
+                'array',
+                'min:1',
+                function ($attribute, $value, $fail) {
+                    // 1. Check if any member is missing an ID
+                    $hasInvalidMember = collect($value)->contains(function ($member) {
+                        return empty($member['id']);
+                    });
+
+                    if ($hasInvalidMember) {
+                        return $fail('Please select or add a member for all fields.');
+                    }
+
+                    // 2. Extract all IDs and check for duplicates
+                    $memberIds = collect($value)->pluck('id')->filter();
+                    
+                    if ($memberIds->count() !== $memberIds->unique()->count()) {
+                        return $fail('You cannot select the same member more than once.');
+                    }
+                },
+            ],
         ]);
 
         $ids = array_column($request->members, 'id'); 
@@ -70,9 +92,15 @@ class TaskController extends Controller
             'file.mimes' => 'Only PDF or image files are allowed',
         ]);
 
-        $user->tasks()->updateExistingPivot($taskId, [
+        $file = $request->file('file');
+        $filename = $file->getClientOriginalName();
+
+        // Default disk
+        $path = Storage::putFileAs('task_files', $file, $filename);
+
+        Auth::user()->tasks()->updateExistingPivot($request->task_id, [
             'content' => $request->input('content'),
-            'file'    => $request->file('file')->store('task_files'),
+            'file'    => $path,
             'status_id' => 2, // e.g. "submitted"
         ]);
 

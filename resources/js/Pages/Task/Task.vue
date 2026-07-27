@@ -1,5 +1,6 @@
 <script setup>
     import Layout from '../../Layouts/Master.vue'; 
+    import TaskForm from './Component/TaskForm.vue';
 
     import { Badge, Button, Card, Divider, FileUpload, FloatLabel, InputText, Message, Textarea } from 'primevue';
     
@@ -14,67 +15,14 @@
     import Step from 'primevue/step';
     import StepPanel from 'primevue/steppanel';
 
-    import { Form } from '@primevue/forms';
-
-    import { usePage, useForm } from '@inertiajs/vue3';
-
-    import { ref, onMounted } from 'vue';
-
-    import * as yup from 'yup'; 
+    import { usePage } from '@inertiajs/vue3';
 
     const page = usePage();
-
+    
     const props = defineProps({
         tasks: Object,
     })
-
-    const isEnabletoEdit = ref(true);
     
-    const form = useForm({
-        file: null,
-        content: null,
-    })
-
-    const schema = yup.object().shape({
-        file: yup
-        .mixed()
-        .required('The file field is required.')
-        .test('fileType', 'Only PDF files are allowed.', (value) => {
-        return value && value.type === 'application/pdf'
-        }),
-        content: yup
-        .string()
-        .required('The content field is required.')
-    });
-
-    const resolver = ({ values }) => {
-        const errors = {};
-        try {
-            schema.validateSync(values, { abortEarly: false });
-        } catch (validationError) {
-            validationError.inner.forEach(err => {
-            errors[err.path] = [{ message: err.message }];
-            });
-        }
-
-        return { values, errors };
-    };
-
-    const onFormSubmit = ({ valid }) => {
-        if (valid) {
-            form.post('/task/submit-task', {
-                onSuccess: () => {
-                    toast.add({
-                        summary: 'Success',
-                        detail: 'Form Submitted',
-                        severity: 'success',
-                        life: 3000
-                    });
-                    emit('close');
-                }
-            });
-        }
-    };
 </script>
 <template>
     <Layout>
@@ -132,47 +80,7 @@
                                                 :value="index + 1"
                                             >
                                                 <fieldset :disabled="page.props.user.id != content.pivot.user_id">
-                                                    <Form v-slot="$form" :resolver @submit="onFormSubmit" class="flex flex-col space-y-4">
-                                                        <div class="flex-1">
-                                                            <div class=" border-surface-200 dark:border-surface-700 rounded bg-surface-50 dark:bg-surface-950 font-medium">
-                                                                <div class="grid grid-rows-1 gap-4">
-                                                                    <div>
-                                                                        <FileUpload 
-                                                                            ref="fileupload" 
-                                                                            mode="basic" 
-                                                                            name="file[]" 
-                                                                            accept="application/pdf, image/*"
-                                                                        />
-                                                                        <Message
-                                                                            v-if="$form.file?.invalid || form.errors.file"
-                                                                            severity="error"
-                                                                            size="small"
-                                                                            variant="simple"
-                                                                        >
-                                                                            {{ $form.file?.error?.message || form.errors.file }}
-                                                                        </Message>
-                                                                    </div>
-                                                                    <div>
-                                                                        <FloatLabel variant="on">
-                                                                            <label for="content">Content</label>
-                                                                            <Textarea v-model="form.content" id="content" name="content" rows="3" fluid></Textarea>
-                                                                            <Message
-                                                                                v-if="$form.content?.invalid || form.errors.content"
-                                                                                severity="error"
-                                                                                size="small"
-                                                                                variant="simple"
-                                                                            >
-                                                                                {{ $form.content?.error?.message || form.errors.content }}
-                                                                            </Message>
-                                                                        </FloatLabel>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="flex justify-end">
-                                                            <Button type="submit" :loading="form.processing" label="Submit" />
-                                                        </div>
-                                                    </Form>
+                                                    <TaskForm :taskId="task.id" />
                                                 </fieldset>
                                             </StepPanel>
                                         </StepPanels>

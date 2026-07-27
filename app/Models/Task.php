@@ -23,9 +23,8 @@ class Task extends Model
     {
         return $this->belongsToMany(User::class, 'user_task_contents')
                     ->select('users.id', 'users.name') // only select specific columns from users table
-                    ->withPivot(['content'])           // only include specific pivot columns
+                    ->withPivot(['content', 'file', 'status_id'])           // only include specific pivot columns
                     ->withTimestamps();
-
     }
 
     public function userTaskContents()

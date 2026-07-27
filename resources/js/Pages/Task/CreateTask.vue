@@ -35,6 +35,10 @@
         form.members.push({ id: null, name: '' });
     }
 
+    function removeMember(index) {
+        form.members.splice(index, 1);
+    }
+
     const filteredUsers = ref(props.departments.map(u => ({
         id: u.id,
         name: u.name,
@@ -71,13 +75,6 @@
         .string()
         .required('The description field is required')
         .matches(/^[A-Za-z0-9 ]+$/, 'The title may only contain letters, numbers, and spaces.'),
-        members: yup.array().of(
-            yup.mixed().test(
-                'is-valid-member',
-                'You must select a member',
-                value => typeof value === 'string' || (value && typeof value === 'object' && value.id)
-            ).required('You must select a member')
-        )
     });
 
     const resolver = ({ values }) => {
@@ -96,6 +93,7 @@
         if (valid) {
             form.post('/task/add-task', {
                 onSuccess: () => {
+                    form.reset();
                     toast.add({
                         summary: 'Success',
                         detail: 'Form Submitted',
@@ -103,10 +101,10 @@
                         life: 3000
                     });
                 },
-                onError: () => {
+                onError: (error) => {
                     toast.add({
                         summary: 'Error',
-                        detail: 'Please add members to submit',
+                        detail: error.members,
                         severity: 'error',
                         life: 3000
                     });
@@ -166,18 +164,22 @@
                         </div>
                         <div class="grid grid-cols-1 gap-4 items-start" v-for="(member, index) in form.members" :key="index">
                             <label>Step {{ index + 1 }}</label>
-                            <AutoComplete
-                                v-model="form.members[index]"
-                                :name="`members[${index}]`"
-                                placeholder="Select a user"
-                                :suggestions="filteredUsers"
-                                optionLabel="name"
-                                optionGroupLabel="name" 
-                                optionGroupChildren="users"
-                                @complete="searchUsers"
-                                fluid
-                                dropdown
-                            />
+                            <div class="flex gap-2">
+                                <AutoComplete
+                                    v-model="form.members[index]"
+                                    :name="`members[${index}]`"
+                                    placeholder="Select a user"
+                                    :suggestions="filteredUsers"
+                                    optionLabel="name"
+                                    optionGroupLabel="name" 
+                                    optionGroupChildren="users"
+                                    @complete="searchUsers"
+                                    fluid
+                                    dropdown
+                                    class="flex-auto"
+                                />
+                                <Button severity="danger" @click="removeMember(index)" icon="pi pi-minus-circle"/>
+                            </div> 
                             <Message
                                 v-if="$form.members?.[index]?.invalid"
                                 severity="error"
