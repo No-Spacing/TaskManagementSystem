@@ -4,7 +4,7 @@
     import Menu from 'primevue/menu';
     import Image from 'primevue/image';
 
-    import { usePage, Link } from "@inertiajs/vue3";
+    import { usePage } from "@inertiajs/vue3";
 
     import { ref } from "vue";
 
@@ -104,7 +104,7 @@
                         </Link>
                     </template>
                     <template #end>
-                        <div class="flex justify-between items-center pt-2">
+                        <div class="flex gap-3 items-center pt-2">
                             <Image src="/assets/images/pmcgroup.png" alt="Image" width="55" />
                             <span class="flex inline-flex flex-col items-start m-2">
                                 <span class="font-bold">{{ page.props.user.name }}</span>

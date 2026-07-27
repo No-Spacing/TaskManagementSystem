@@ -10,6 +10,7 @@ use Inertia\Inertia;
 
 use App\Models\User;
 use App\Models\Department;
+use App\Models\Role;
 
 class UserController extends Controller
 {
@@ -17,27 +18,31 @@ class UserController extends Controller
     {
         $users = User::with(['department', 'status'])->get();
         $department = Department::all();
+        $roles = Role::all();
 
         return Inertia::render('Users/Users', [
             'users' => $users,
-            'department' => $department
+            'department' => $department,
+            'roles' => $roles
         ]);
     }
 
-    public function addUser(Request $request)
+    public function AddUser(Request $request)
     {
-        $request->validate([
+        $validate = $request->validate([
             'name' => 'required|regex:/^[A-Za-z0-9 ]+$/',
             'email' => 'required|email|unique:users',
             'department' => 'required|integer|exists:departments,id',
-            'password' => 'required|string|min:8'
+            'password' => 'required|string|min:8',
+            'role' => 'required|integer|exists:roles,id',
         ]);
 
         User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'department_id' => $request->department,
-            'password' => Hash::make(Str::random(12)),
+            'name' => $validate['name'],
+            'email' => $validate['email'],
+            'department_id' => $validate['department'],
+            'password' => Hash::make($validate['password']),
+            'role_id' => $validate['role'],
             'status_id' => 3
         ]);
     }

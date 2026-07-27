@@ -34,14 +34,14 @@ class DatabaseSeeder extends Seeder
         Role::create(['name' => 'Staff']);
 
         User::create([
-            'email' => 'admin@pmcgroup.com',
+            'email' => 'webdev@pmcgroup.com',
             'name' => "Web Developer",
             'password' => 'password',
             'department_id' => 1,
             'status_id' => 3,
-            'role_id' => 1
+            'role_id' => 3
         ]);
 
-        User::factory(5)->create();
+        // User::factory(5)->create();
     }
 }

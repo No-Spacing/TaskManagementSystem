@@ -11,6 +11,7 @@ import { animator } from 'chart.js';
 import { MotionPlugin } from 'motion-v'
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { MyCustomTheme } from './theme';
+import { Link } from "@inertiajs/vue3";
 
 createInertiaApp({
     resolve: (name) => resolvePageComponent(`./Pages/${name}.vue`, import.meta.glob('./Pages/**/*.vue')),
@@ -30,6 +31,7 @@ createInertiaApp({
         .use(MotionPlugin)
         .directive('ripple', Ripple)
         .directive('animateonscroll', AnimateOnScroll)
+        .component('Link', Link)
         .mount(el)
     },
 })

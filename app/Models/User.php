@@ -29,7 +29,8 @@ class User extends Authenticatable
         'password',
         'steps',
         'department_id',
-        'status_id'
+        'status_id',
+        'role_id'
     ];
 
     /**

@@ -85,7 +85,7 @@
                         List of Tasks
                     </div>
                     <div>
-                        <Button as="a" href="/task/create-task">Create Task</Button>
+                        <Link href="/task/create-task"><Button>Create Task</Button></Link>
                     </div>
                 </div>
             </template>

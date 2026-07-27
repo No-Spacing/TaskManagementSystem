@@ -12,11 +12,13 @@
         name: null,
         email: null,
         department: null,
-        password: null
+        password: null,
+        role: null
     });
 
     const props = defineProps({
-        department: Object // or Object, depending on your data
+        department: Object, // or Object, depending on your data
+        roles: Object
     })
 
     const emit = defineEmits(['close'])
@@ -37,7 +39,10 @@
         .string()
         .required('The password field is required')
         .min(8, 'Password is too short - should be 8 chars minimum.')
-        .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.')
+        .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.'),
+        role: yup
+        .number()
+        .required('The role field is required'),
     });
 
     const resolver = ({ values }) => {
@@ -119,6 +124,18 @@
                 variant="simple"
             >
                 {{ $form.password?.error?.message || form.errors.password }}
+            </Message>
+        </div>
+        <div class="flex flex-col gap-1 mb-4">
+            <label for="role" class="font-semibold w-24">Role</label>
+            <Select v-model="form.role" id="role" name="role" class="flex-auto" :options="props.roles" optionLabel="name" optionValue="id" />
+            <Message
+                v-if="$form.role?.invalid || form.errors.role"
+                severity="error"
+                size="small"
+                variant="simple"
+            >
+                {{ $form.role?.error?.message || form.errors.role }}
             </Message>
         </div>
         <div class="my-8">

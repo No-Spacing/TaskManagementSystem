@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->longText('description');
-            $table->foreignId('assigned_departments')->references('id')->on('departments');
+            $table->longText('description')->nullable();
+            $table->foreignId('assigned_department_id')->references('id')->on('departments');
             $table->foreignId('created_by')->references('id')->on('users');
-            $table->foreignId('submitted_by')->references('id')->on('users');
+            $table->foreignId('submitted_by')->nullable()->references('id')->on('users');
             $table->foreignId('status_id')->references('id')->on('statuses');
             $table->timestamps();
         });

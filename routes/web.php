@@ -62,7 +62,7 @@ Route::middleware(['auth-group'])->group(function () {
         
     Route::controller(UserController::class)->group(function () {
         Route::get('/users', 'index');
-        Route::post('/add-user', 'addUser');
+        Route::post('/add-user', 'AddUser'); // Add user to database
     });
 
     Route::get('/logout', [AuthController::class, 'logout']);

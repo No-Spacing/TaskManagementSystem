@@ -9,6 +9,7 @@
     const props = defineProps({
         users: Object,
         department: Object,
+        roles: Object
     })
 
     const addUserDialog = ref(false);
@@ -51,7 +52,7 @@
             </template>
         </Card>
         <Dialog v-model:visible="addUserDialog" modal header="Add User" :style="{ width: '35rem' }">
-            <AddUserModal @close="addUserDialog = false" :department="props.department"></AddUserModal>
+            <AddUserModal @close="addUserDialog = false" :department="props.department" :roles="props.roles"></AddUserModal>
         </Dialog>
     </Layout>
 </template>
