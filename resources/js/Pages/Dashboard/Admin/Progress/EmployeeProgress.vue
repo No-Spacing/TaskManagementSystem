@@ -5,7 +5,6 @@
 
     const props = defineProps({ users: Object });
 
-    console.log(props.users);
 </script>
 
 <template>

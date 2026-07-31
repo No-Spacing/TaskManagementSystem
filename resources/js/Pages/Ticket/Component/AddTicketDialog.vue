@@ -1,9 +1,14 @@
 <script setup>
     import { useToast } from 'primevue/usetoast';
+    import { onMounted } from 'vue';
     import { Form } from '@primevue/forms';
     import { InputText, Button, Select, Divider, Message, Password, Textarea, DatePicker } from 'primevue';
-    
+   
     import * as yup from 'yup';
+
+    onMounted(() => {
+        console.log('Component is now mounted!')
+    })
 
     import { useForm } from '@inertiajs/vue3'
 

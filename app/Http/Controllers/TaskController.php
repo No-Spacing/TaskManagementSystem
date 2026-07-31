@@ -96,7 +96,7 @@ class TaskController extends Controller
         $filename = $file->getClientOriginalName();
 
         // Default disk
-        $path = Storage::putFileAs('task_files', $file, $filename);
+        $path = Storage::disk('public')->putFileAs('task_files', $file, $filename);
 
         Auth::user()->tasks()->updateExistingPivot($request->task_id, [
             'content' => $request->input('content'),

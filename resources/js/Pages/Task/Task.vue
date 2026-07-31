@@ -16,13 +16,14 @@
     import StepPanel from 'primevue/steppanel';
 
     import { usePage } from '@inertiajs/vue3';
+    import ViewTask from './Component/ViewTask.vue';
 
     const page = usePage();
     
     const props = defineProps({
         tasks: Object,
     })
-    
+
 </script>
 <template>
     <Layout>
@@ -79,9 +80,14 @@
                                                 :key="index"
                                                 :value="index + 1"
                                             >
-                                                <fieldset :disabled="page.props.user.id != content.pivot.user_id">
-                                                    <TaskForm :taskId="task.id" />
-                                                </fieldset>
+                                                <div v-if="content.pivot.status_id != 2">
+                                                    <fieldset :disabled="page.props.user.id != content.pivot.user_id">
+                                                        <TaskForm :taskId="task.id" />
+                                                    </fieldset>
+                                                </div>
+                                                <div v-else>
+                                                    <ViewTask :file="content.pivot.file" :content="content.pivot.content"></ViewTask>
+                                                </div>
                                             </StepPanel>
                                         </StepPanels>
                                     </Stepper>

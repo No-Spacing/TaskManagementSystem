@@ -17,6 +17,7 @@ class AuthMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        
         if(!Auth::check() && $request->path() != 'login'){
             return redirect('login')->withErrors(['error' => 'User must be logged in.']);
         }
