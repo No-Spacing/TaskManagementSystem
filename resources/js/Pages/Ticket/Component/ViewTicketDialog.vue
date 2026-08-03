@@ -5,35 +5,32 @@
     
     import * as yup from 'yup';
 
-    import { useForm } from '@inertiajs/vue3'
+    import { useForm, usePage } from '@inertiajs/vue3'
+    import { ref } from 'vue';
 
     const toast = useToast();
     const form = useForm({
-        title:null,
-        description: null,
-        department: null,
-        date_needed: null,
+        ticket_id: null,
+        status: null
     });
 
     const props = defineProps({
         ticketData: Object
     })
 
+    const page = usePage();
+
+    const statuses = ref([
+        { id: 1, name: 'In Progress' },
+        { id: 2, name: 'Finished' },
+    ]);
+
     const emit = defineEmits(['close'])
 
     const schema = yup.object().shape({
-        title: yup
-        .string()
-        .required('The title field is required'),
-        description: yup
-        .string()
-        .required('The description field is required'),
-        department: yup
+        status: yup
         .number()
-        .required('The department field is required'),
-        date_needed: yup
-        .date()
-        .required('The date field is required')
+        .required('The status field is required')
     });
 
     const resolver = ({ values }) => {
@@ -43,7 +40,7 @@
             schema.validateSync(values, { abortEarly: false });
         } catch (validationError) {
             validationError.inner.forEach(err => {
-            errors[err.path] = [{ message: err.message }];
+                errors[err.path] = [{ message: err.message }];
             });
         }
 
@@ -52,57 +49,72 @@
 
     const onFormSubmit = ({ valid }) => {
         if (valid) {
-            form.post('/ticket/add-ticket', {
+            form
+            .transform((data) => ({
+                ...data,
+                ticket_id: props.ticketData.data.id
+            }))
+            .post('/ticket/submit-ticket', {
                 onSuccess: () => {
                     toast.add({
                         summary: 'Success',
-                        detail: 'Form Submitted',
+                        detail: page.props.flash.message,
                         severity: 'success',
                         life: 3000
                     });
                     emit('close');
+                },
+                onError: (error) => {
+                    toast.add({
+                        summary: 'Warning',
+                        detail: error.message,
+                        severity: 'warn',
+                        life: 3000
+                    });
                 }
             });
         }
     };
 </script>
 <template>
-    <span class="text-surface-500 dark:text-surface-400 block mb-8">Type the ticket details.</span>
+    <span class="text-surface-500 dark:text-surface-400 block mb-8">View ticket details.</span>
     <Form v-slot="$form" :resolver @submit="onFormSubmit">
         <div class="flex flex-col gap-1 mb-4">
             <label for="title" class="font-semibold w-24">Title</label>
-            <InputText v-model="form.title" id="title" name="title" class="flex-auto" :value="props.ticketData.data.title" fluid disabled/>
-            <Message
-                v-if="$form.title?.invalid || form.errors.title"
-                severity="error"
-                size="small"
-                variant="simple"
-            >
-                {{ $form.title?.error?.message || form.errors.title }}
-            </Message>
+            <InputText id="title" name="title" class="flex-auto" :value="props.ticketData.data.title" fluid disabled/>
         </div>
         <div class="flex flex-col gap-1 mb-4">
             <label for="description" class="font-semibold w-24">Description</label>
-            <Textarea v-model="form.description" :value="props.ticketData.data.description" id="description" name="description" class="flex-auto" rows="5" fluid disabled/>
+            <Textarea :value="props.ticketData.data.description" id="description" name="description" class="flex-auto" rows="5" fluid disabled/>
+        </div>
+        <div class="flex flex-col gap-1 mb-4">
+            <label for="department" class="font-semibold w-24">Department</label>
+            <InputText id="department" name="department" class="flex-auto" :value="props.ticketData.data.department.name" disabled/>
+        </div>
+
+        <div class="flex flex-col gap-1 mb-4">
+            <label for="status" class="font-semibold w-24">Status</label>
+            <Select v-model="form.status" :disabled="props.ticketData.data.status_id === 2" id="status" name="status" class="flex-auto" :options="statuses" option-label="name" option-value="id" :default-value="props.ticketData.data.status_id"/>
             <Message
-                v-if="$form.description?.invalid || form.errors.description"
+                v-if="$form.status?.invalid || form.errors.status"
                 severity="error"
                 size="small"
                 variant="simple"
             >
-                {{ $form.description?.error?.message || form.errors.description }}
+                {{ $form.status?.error?.message || form.errors.status }}
             </Message>
         </div>
+
         <div class="flex flex-col gap-1 mb-4">
-            <label for="department" class="font-semibold w-24">Department</label>
-            <InputText v-model="form.department" id="department" name="department" class="flex-auto" :value="props.ticketData.data.department.name  " disabled/>
+            <label for="title" class="font-semibold w-25">Submitted by</label>
+            <InputText id="title" name="title" class="flex-auto" fluid :value="props.ticketData.data?.user?.name" disabled/>
         </div>
         
         <div class="my-8">
             <Divider></Divider>
         </div>
-        <div class="flex justify-end gap-2">
-            <Button label="Update" :loading="form.processing" :style="{ width: '7rem' }" />
+        <div v-if="props.ticketData.data.status_id === 1" class="flex justify-end gap-2">
+            <Button type="submit" label="Update" :loading="form.processing" :style="{ width: '7rem' }" />
         </div>
     </Form>
 </template>

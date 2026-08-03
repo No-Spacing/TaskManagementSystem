@@ -25,6 +25,11 @@ class Ticket extends Model
         return $date->format('Y-m-d H:i:s');
     }
 
+    public function user(): HasOne
+    {
+        return $this->hasOne(User::class, 'id', 'submitted_by');
+    }
+
     public function department(): HasOne
     {
         return $this->hasOne(Department::class, 'id', 'assigned_department_id');

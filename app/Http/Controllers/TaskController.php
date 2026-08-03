@@ -101,7 +101,7 @@ class TaskController extends Controller
         Auth::user()->tasks()->updateExistingPivot($request->task_id, [
             'content' => $request->input('content'),
             'file'    => $path,
-            'status_id' => 2, // e.g. "submitted"
+            'status_id' => 2,
         ]);
 
         return redirect('/task');

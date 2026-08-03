@@ -88,7 +88,7 @@
         <Dialog v-model:visible="addTicketDialog" modal header="Add Ticket" :style="{ width: '50rem' }">
             <AddTicketDialog @close="addTicketDialog = false" :departments="props.departments"></AddTicketDialog>
         </Dialog>
-        <Dialog v-model:visible="viewTicketDialog" modal header="Add Ticket" :style="{ width: '50rem' }">
+        <Dialog v-model:visible="viewTicketDialog" modal header="View Ticket" :style="{ width: '50rem' }">
             <ViewTicketDialog @close="viewTicketDialog = false" :ticketData="selectedTicket"></ViewTicketDialog>
         </Dialog>
     </Layout>

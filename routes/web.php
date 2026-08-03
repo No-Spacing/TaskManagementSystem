@@ -57,6 +57,7 @@ Route::middleware(['auth-group'])->group(function () {
         Route::controller(TicketController::class)->group(function () {
             Route::get('/', 'Index');
             Route::post('/add-ticket', 'AddTicket'); // Add ticket to database
+            Route::post('/submit-ticket', 'SubmitTicket');
         });
     });
         
